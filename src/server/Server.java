@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.crypto.NoSuchPaddingException;
 
@@ -19,6 +20,8 @@ import server.terrain.World;
 public class Server {
 	private ServerSocket connectionListener;
 	private EntityHandler entityHandler;
+	private Configuration configuration;
+	private String serverId;
 	private int port;
 	private List<World> worlds = new ArrayList<World>();
 
@@ -30,6 +33,18 @@ public class Server {
 	
 	public Server(int port) throws IOException {
 		setPort(port);
+		
+		String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		serverId = "";
+		Random rng = new Random();
+		for (int i = 0; i < 16; i++) {
+			int off = rng.nextInt(chars.length());
+			serverId += chars.substring(off, off+1);
+		}
+		
+		Configuration config = new Configuration();
+		configuration = config;
+		
 		entityHandler = new EntityHandler();
 		connectionListener = new ServerSocket(port);
 		worlds.add(new World(0, 256, 256, 128));
@@ -54,6 +69,14 @@ public class Server {
 			Thread thread = new Thread(player);
 			thread.start();
 		}
+	}
+	
+	public String getServerId() {
+		return serverId;
+	}
+	
+	public void setServerId(String serverId) {
+		this.serverId = serverId;
 	}
 
 	public ServerSocket getConnectionListener() {
@@ -86,6 +109,14 @@ public class Server {
 
 	public void setWorlds(List<World> worlds) {
 		this.worlds = worlds;
+	}
+
+	public Configuration getConfiguration() {
+		return configuration;
+	}
+
+	public void setConfiguration(Configuration configuration) {
+		this.configuration = configuration;
 	}
 
 }

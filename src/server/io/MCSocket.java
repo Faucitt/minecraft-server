@@ -26,9 +26,13 @@ public class MCSocket {
 	
 	private boolean encryptionEnabled;
 	
+	private byte[] sharedSecret;
+	
 	public MCSocket(byte[] sharedSecret, InputStream in, OutputStream out) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
 		unencryptedInput = new DataInputStream(in);
 		unencryptedOutput = new DataOutputStream(out);
+		
+		setSharedSecret(sharedSecret);
 		
 		SecretKey key = new SecretKeySpec(sharedSecret, "AES");
 		IvParameterSpec iv = new IvParameterSpec(sharedSecret);
@@ -43,7 +47,6 @@ public class MCSocket {
 	}
 	
 	public void enableEncryption(SecretKey key) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
-		//SecretKey key = new SecretKeySpec(sharedSecret, "AES");
 		IvParameterSpec iv = new IvParameterSpec(key.getEncoded(), 0, 16);
 		
 		Cipher cipherInput = Cipher.getInstance("AES/CFB8/NoPadding");
@@ -158,5 +161,20 @@ public class MCSocket {
 
 	public void setEncryptionEnabled(boolean encryptionEnabled) {
 		this.encryptionEnabled = encryptionEnabled;
+	}
+	
+	public void close() throws IOException {
+		unencryptedInput.close();
+		unencryptedOutput.close();
+		encryptedInput.close();
+		encryptedOutput.close();
+	}
+
+	public byte[] getSharedSecret() {
+		return sharedSecret;
+	}
+
+	public void setSharedSecret(byte[] sharedSecret) {
+		this.sharedSecret = sharedSecret;
 	}
 }
