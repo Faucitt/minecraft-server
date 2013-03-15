@@ -77,8 +77,9 @@ public class Player extends Entity implements Runnable {
 		return false;
 	}
 	
-	public boolean receivePacket() throws IOException {
-		return false;
+	public void receivePacket() throws IOException {
+		byte packetId = socket.readByte();
+		throw new IOException("Unhandled packet " + Integer.toHexString(packetId));
 	}
 
 	public String getUsername() {
@@ -106,7 +107,7 @@ public class Player extends Entity implements Runnable {
 						"60" + Encode.character(0) + 
 						"1.5" + Encode.character(0) + 
 						config.getMotd() + Encode.character(0) + 
-						Integer.toString(server.getEntityHandler().getPlayerCount()-1) + Encode.character(0) + 
+						Integer.toString(server.getEntityHandler().getPlayerCount()) + Encode.character(0) + 
 						Integer.toString(config.getMaxPlayers()));
 				socket.writeByte(packet.getId());
 				packet.write(socket);
@@ -149,6 +150,8 @@ public class Player extends Entity implements Runnable {
 				FlyingPacket flyingPacket = new FlyingPacket(true);
 				socket.writeByte(flyingPacket.getId());
 				flyingPacket.write(socket);
+				
+				server.getEntityHandler().addPlayer(this);
 				break;
 			}
 		} catch (IOException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
@@ -156,10 +159,16 @@ public class Player extends Entity implements Runnable {
 			server.getEntityHandler().removePlayer(this);
 		}
 		
-		//Packet reading and writing.
+		//Packet reading.
+		if (keepRunning) {
+			Thread thread = new Thread(new PacketReader(this));
+			thread.start();
+		}
+		
+		//Packet writing.
 		while (keepRunning) {
 			try {
-				if (!(sendPacket() || receivePacket())) Thread.currentThread().sleep(10);
+				if (!(sendPacket())) Thread.currentThread().sleep(10);
 			} catch (IOException | InterruptedException e) {
 				server.getEntityHandler().removePlayer(this);
 				keepRunning = false;

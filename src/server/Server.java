@@ -66,7 +66,6 @@ public class Server {
 			MCSocket mcsocket = new MCSocket(sharedSecret, socket.getInputStream(), socket.getOutputStream());
 			
 			Player player = new Player(mcsocket, this);
-			entityHandler.addPlayer(player);
 			
 			Thread thread = new Thread(player);
 			thread.start();
