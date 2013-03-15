@@ -8,8 +8,8 @@ import server.model.Entity;
 import server.model.Player;
 
 public class EntityHandler {
-	public static List<Entity> entities = new ArrayList<Entity>();
-	public static List<Player> players = new ArrayList<Player>();
+	public List<Entity> entities = new ArrayList<Entity>();
+	public List<Player> players = new ArrayList<Player>();
 	
 	public List<Entity> getEntities() {
 		return entities;

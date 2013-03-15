@@ -68,6 +68,18 @@ public class MCSocket {
 		getOutputStream().write(data);
 	}
 	
+	public void writeByteArray(byte[] data) throws IOException {
+		writeShort((short) data.length);
+		if (data.length > 32767) throw new IOException("Array too large");
+		writeData(data);
+	}
+	
+	public byte[] readByteArray() throws IOException {
+		short length = readShort();
+		if (length < 0) throw new IOException("Array length less than 0.");
+		return readData(length);
+	}
+	
 	public byte readByte() throws IOException {
 		return getInputStream().readByte();
 	}

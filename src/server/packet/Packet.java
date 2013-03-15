@@ -6,7 +6,7 @@ import server.io.MCSocket;
 
 
 public abstract class Packet {
-	public abstract byte[] write(MCSocket socket) throws IOException;
+	public abstract void write(MCSocket socket) throws IOException;
 	public abstract Packet read(MCSocket socket) throws IOException;
 	
 	private byte id;
