@@ -56,7 +56,6 @@ public class MCSocket {
 		Cipher cipherOutput = Cipher.getInstance("AES/CFB8/NoPadding");
 		cipherOutput.init(Cipher.ENCRYPT_MODE, key, iv);
 		encryptedOutput = new DataOutputStream(new CipherOutputStream(unencryptedOutput, cipherOutput));
-	
 		setEncryptionEnabled(true);
 	}
 	
@@ -116,7 +115,7 @@ public class MCSocket {
 	}
 	
 	public void writeInt(int i) throws IOException {
-		getOutputStream().write(i);
+		getOutputStream().writeInt(i);
 	}
 	
 	public void writeLong(long i) throws IOException {

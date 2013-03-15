@@ -22,7 +22,9 @@ import server.io.MCSocket;
 import server.packet.DisconnectPacket;
 import server.packet.EncryptionRequestPacket;
 import server.packet.EncryptionResponsePacket;
+import server.packet.FlyingPacket;
 import server.packet.HandshakePacket;
+import server.packet.LoginPacket;
 import server.packet.Packet;
 import server.util.Encode;
 
@@ -35,6 +37,8 @@ public class Player extends Entity implements Runnable {
 	private Queue<Packet> packetQueue = new ArrayBlockingQueue<Packet>(4096);
 	
 	public Player(MCSocket socket, Server server) throws NoSuchAlgorithmException {
+		super();
+		
 		setSocket(socket);
 		setServer(server);
 		
@@ -108,12 +112,12 @@ public class Player extends Entity implements Runnable {
 				packet.write(socket);
 				
 				socket.close();
+				
+				server.getEntityHandler().removePlayer(this);
 				keepRunning = false;
 				break;
 			case (byte) 0x02:
 			default:
-				System.out.println("Login request.");
-				
 				HandshakePacket handshake = HandshakePacket.read(socket);
 				setUsername(handshake.getUsername());
 				
@@ -132,10 +136,23 @@ public class Player extends Entity implements Runnable {
 				emptyResponse.write(socket);
 				
 				socket.enableEncryption(sharedKey);
+				
+				LoginPacket loginPacket = new LoginPacket(getId());
+				loginPacket.setLevelType("default");
+				loginPacket.setGameMode((byte) 0);
+				loginPacket.setDimension((byte) 0);
+				loginPacket.setDifficulty((byte) 0);
+				loginPacket.setMaxPlayers((byte) 32);
+				socket.writeByte(loginPacket.getId());
+				loginPacket.write(socket);
+				
+				FlyingPacket flyingPacket = new FlyingPacket(true);
+				socket.writeByte(flyingPacket.getId());
+				flyingPacket.write(socket);
 				break;
 			}
 		} catch (IOException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
-			try { socket.close(); } catch (IOException e1) {}
+			try { socket.close(); } catch (IOException ex) {}
 			server.getEntityHandler().removePlayer(this);
 		}
 		
@@ -148,6 +165,7 @@ public class Player extends Entity implements Runnable {
 				keepRunning = false;
 			}
 		}
+		try { socket.close(); } catch (IOException e) {}
 	}
 
 	public Server getServer() {

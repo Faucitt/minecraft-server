@@ -57,6 +57,8 @@ public class Server {
 		while (true) {
 			Socket socket = connectionListener.accept();
 			
+			socket.setSoTimeout(60000);
+			
 			byte[] sharedSecret = new byte[16];
 			SecureRandom rng = new SecureRandom();
 			rng.nextBytes(sharedSecret);
