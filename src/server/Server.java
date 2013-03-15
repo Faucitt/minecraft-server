@@ -8,16 +8,20 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.crypto.NoSuchPaddingException;
 
 import server.io.MCSocket;
 import server.model.Player;
+import server.terrain.World;
 
 public class Server {
 	private ServerSocket connectionListener;
 	private EntityHandler entityHandler;
 	private int port;
+	private List<World> worlds = new ArrayList<World>();
 
 	public static void main(String[] args) throws Exception {
 		if (args.length < 1) throw new Exception("Incorrect arguments, expected: [port]");
@@ -26,9 +30,10 @@ public class Server {
 	}
 	
 	public Server(int port) throws IOException {
-		this.setPort(port);
+		setPort(port);
 		entityHandler = new EntityHandler();
 		connectionListener = new ServerSocket(port);
+		worlds.add(new World(0, 256, 256, 128));
 	}
 	
 	public void process() throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException {
@@ -74,6 +79,14 @@ public class Server {
 
 	public void setPort(int port) {
 		this.port = port;
+	}
+
+	public List<World> getWorlds() {
+		return worlds;
+	}
+
+	public void setWorlds(List<World> worlds) {
+		this.worlds = worlds;
 	}
 
 }

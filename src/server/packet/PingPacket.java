@@ -19,10 +19,11 @@ public class PingPacket extends Packet {
 		socket.writeInt(rng.nextInt());
 	}
 
-	@Override
-	public Packet read(MCSocket socket) throws IOException {
-		random = socket.readInt();
-		return this;
+	public static PingPacket read(MCSocket socket) throws IOException {
+		int random = socket.readInt();
+		PingPacket packet = new PingPacket();
+		packet.setRandom(random);
+		return packet;
 	}
 
 	public int getRandom() {

@@ -4,16 +4,16 @@ import java.io.IOException;
 
 import server.io.MCSocket;
 
-public class EncryptionRequest extends Packet {
-
-	private byte[] sharedSecret, verificationToken;
+public class EncryptionResponsePacket extends Packet {
 	
-	public EncryptionRequest() {
-		super((byte) 0xFD);
+	private byte[] sharedSecret, verificationToken;
+
+	public EncryptionResponsePacket() {
+		super((byte) 0xFC);
 	}
 	
-	public EncryptionRequest(byte[] sharedSecret, byte[] verificationToken) {
-		super((byte) 0xFD);
+	public EncryptionResponsePacket(byte[] sharedSecret, byte[] verificationToken) {
+		super((byte) 0xFC);
 		setSharedSecret(sharedSecret);
 		setVerificationToken(verificationToken);
 	}
@@ -24,9 +24,11 @@ public class EncryptionRequest extends Packet {
 		socket.writeByteArray(getVerificationToken());
 	}
 
-	@Override
-	public Packet read(MCSocket socket) throws IOException {
-		throw new IOException("Unexpected packet, 0xFD - EncryptionRequest");
+	public static EncryptionResponsePacket read(MCSocket socket) throws IOException {
+		EncryptionResponsePacket packet = new EncryptionResponsePacket();
+		packet.setSharedSecret(socket.readByteArray());
+		packet.setVerificationToken(socket.readByteArray());
+		return packet;
 	}
 
 	public byte[] getSharedSecret() {
@@ -44,5 +46,4 @@ public class EncryptionRequest extends Packet {
 	public void setVerificationToken(byte[] verificationToken) {
 		this.verificationToken = verificationToken;
 	}
-
 }
