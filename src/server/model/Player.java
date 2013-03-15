@@ -122,7 +122,7 @@ public class Player extends Entity implements Runnable {
 				encryptRequest.write(socket);
 				
 				byte responseId = socket.readByte();
-				if (responseId != 0xFC) throw new IOException("Unexpected packet. Expected 0xFC - EncryptionResponse");
+				if (responseId != ((byte) 0xFC)) throw new IOException("Unexpected packet. Expected 0xFC - EncryptionResponse");
 				EncryptionResponsePacket encryptResponse = EncryptionResponsePacket.read(socket);
 				SecretKey sharedKey = Cryptography.decryptSharedKey(keyPair.getPrivate(), encryptResponse.getSharedSecret());
 				
@@ -135,6 +135,7 @@ public class Player extends Entity implements Runnable {
 				break;
 			}
 		} catch (IOException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
+			try { socket.close(); } catch (IOException e1) {}
 			server.getEntityHandler().removePlayer(this);
 		}
 		
