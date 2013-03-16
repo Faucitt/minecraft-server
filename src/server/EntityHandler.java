@@ -10,8 +10,8 @@ import server.packet.ChatPacket;
 import server.packet.Packet;
 
 public class EntityHandler {
-	public List<Entity> entities = new ArrayList<Entity>();
-	public List<Player> players = new ArrayList<Player>();
+	public List<Entity> entities = new ArrayList<>();
+	public List<Player> players = new ArrayList<>();
 	
 	public List<Entity> getEntities() {
 		return entities;

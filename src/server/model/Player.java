@@ -34,6 +34,7 @@ public class Player extends Entity implements Runnable {
 	private Server server;
 	private byte[] verificationToken;
 	private KeyPair keyPair;
+	private PacketHandler packetHandler;
 	private Queue<Packet> packetQueue = new ArrayBlockingQueue<Packet>(4096);
 	
 	public Player(MCSocket socket, Server server) throws NoSuchAlgorithmException {
@@ -79,7 +80,7 @@ public class Player extends Entity implements Runnable {
 	
 	public void receivePacket() throws IOException {
 		byte packetId = socket.readByte();
-		throw new IOException("Unhandled packet " + Integer.toHexString(packetId));
+		packetHandler.handlePacket(packetId, socket);
 	}
 
 	public String getUsername() {
@@ -161,7 +162,8 @@ public class Player extends Entity implements Runnable {
 		
 		//Packet reading.
 		if (keepRunning) {
-			Thread thread = new Thread(new PacketReader(this));
+			packetHandler = new PacketHandler(this);
+			Thread thread = new Thread(packetHandler);
 			thread.start();
 		}
 		

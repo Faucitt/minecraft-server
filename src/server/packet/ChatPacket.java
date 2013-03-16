@@ -29,7 +29,7 @@ public class ChatPacket extends Packet {
 		socket.writeString(message);
 	}
 	
-	public ChatPacket read(MCSocket socket) throws IOException {
+	public static ChatPacket read(MCSocket socket) throws IOException {
 		ChatPacket packet = new ChatPacket();
 		packet.setMessage(socket.readString().replace("§", ""));
 		return packet;

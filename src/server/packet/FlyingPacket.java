@@ -19,7 +19,13 @@ public class FlyingPacket extends Packet {
 	
 	@Override
 	public void write(MCSocket socket) throws IOException {
-		socket.writeByte((byte) (flying? 1 : 0));
+		socket.writeByte((byte) (flying? 0 : 1));
+	}
+	
+	public static FlyingPacket read(MCSocket socket) throws IOException {
+		FlyingPacket packet = new FlyingPacket();
+		packet.setFlying(socket.readByte() == 0);
+		return packet;
 	}
 
 	public boolean isFlying() {
