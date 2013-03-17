@@ -72,7 +72,7 @@ public class MCSocket {
 	
 	public void writeByteArray(byte[] data) throws IOException {
 		writeShort((short) data.length);
-		if (data.length > 32767) throw new IOException("Array too large");
+		if (data.length > 32767) throw new IOException("Array too large.");
 		writeData(data);
 	}
 	
@@ -91,7 +91,7 @@ public class MCSocket {
 	}
 	
 	public int readInt() throws IOException {
-		return getInputStream().read();
+		return getInputStream().readInt();
 	}
 	
 	public long readLong() throws IOException {

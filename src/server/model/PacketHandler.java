@@ -29,6 +29,13 @@ public class PacketHandler implements Runnable {
 		case (byte) 0x03:
 			ChatPacket chatPacket = ChatPacket.read(socket);
 			String chatMessage = chatPacket.getMessage();
+			
+			chatMessage = "<" + player.getUsername() + "> " + chatMessage;
+			ChatPacket chatResponsePacket = new ChatPacket(chatMessage);
+			for (Player p : player.getServer().getEntityHandler().getPlayers()) {
+				p.pushPacket(chatResponsePacket);
+			}
+			
 			System.out.println("<" + player.getUsername() + "> " + chatMessage);
 			break;
 		case (byte) 0x07:

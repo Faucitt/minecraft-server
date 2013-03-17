@@ -55,8 +55,6 @@ public class AnimationPacket extends Packet {
 		AnimationPacket packet = new AnimationPacket();
 		packet.setEntityId(socket.readInt());
 		packet.setAnimation(Animation.getForId(socket.readByte()));
-		System.out.println(packet.getEntityId());
-		System.out.println(packet.getAnimation());
 		return packet;
 	}
 

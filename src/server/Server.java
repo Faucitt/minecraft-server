@@ -52,7 +52,9 @@ public class Server {
 	
 	public void process() throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException {
 		//Start physics threads etc. here.
-
+		Thread tickThread = new Thread(new TickHandler(this));
+		tickThread.start();
+		
 		//Connection listener thread.
 		while (true) {
 			Socket socket = connectionListener.accept();
