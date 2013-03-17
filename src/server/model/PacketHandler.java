@@ -3,7 +3,7 @@ package server.model;
 import java.io.IOException;
 
 import server.io.MCSocket;
-import server.packet.*;
+import server.io.packet.*;
 
 public class PacketHandler implements Runnable {
 	private Player player;

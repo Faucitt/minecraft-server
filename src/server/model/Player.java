@@ -19,13 +19,13 @@ import server.Configuration;
 import server.Server;
 import server.io.Cryptography;
 import server.io.MCSocket;
-import server.packet.DisconnectPacket;
-import server.packet.EncryptionRequestPacket;
-import server.packet.EncryptionResponsePacket;
-import server.packet.FlyingPacket;
-import server.packet.HandshakePacket;
-import server.packet.LoginPacket;
-import server.packet.Packet;
+import server.io.packet.DisconnectPacket;
+import server.io.packet.EncryptionRequestPacket;
+import server.io.packet.EncryptionResponsePacket;
+import server.io.packet.FlyingPacket;
+import server.io.packet.HandshakePacket;
+import server.io.packet.LoginPacket;
+import server.io.packet.Packet;
 import server.util.Encode;
 
 public class Player extends Entity implements Runnable {

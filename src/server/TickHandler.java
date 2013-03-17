@@ -1,7 +1,7 @@
 package server;
 
+import server.io.packet.PingPacket;
 import server.model.Player;
-import server.packet.PingPacket;
 
 public class TickHandler implements Runnable {
 

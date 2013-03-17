@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import server.io.packet.ChatPacket;
+import server.io.packet.Packet;
 import server.logging.Logger;
 import server.model.Entity;
 import server.model.Player;
-import server.packet.ChatPacket;
-import server.packet.Packet;
 
 public class EntityHandler {
 	private static final Logger logger = Logger.getLogger(EntityHandler.class.getName());

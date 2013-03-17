@@ -1,4 +1,4 @@
-package server.packet;
+package server.io.packet;
 
 import java.io.IOException;
 import java.util.List;
