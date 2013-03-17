@@ -1,9 +1,12 @@
 package server.nbt;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
-import server.io.MCSocket;
+import server.util.CompressionType;
 
 public abstract class Tag {
 	
@@ -54,8 +57,20 @@ public abstract class Tag {
 		return type;
 	}
 	
-	public static List<Tag> parse(MCSocket socket) {
+	public static List<Tag> parse(InputStream in, CompressionType type) {
+		switch(type) {
+		case GZIP:
+			return parseGzip((GZIPInputStream) in);
+		default:
+			return null;
+		}
+	}
+	
+	public static List<Tag> parseGzip(GZIPInputStream in) {
 		List<Tag> tags = new ArrayList<>();
+		//TODO
 		return tags;
 	}
+	
+	public abstract Tag read(InputStream in) throws IOException;
 }

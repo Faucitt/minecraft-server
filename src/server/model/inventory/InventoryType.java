@@ -1,4 +1,4 @@
-package server.util;
+package server.model.inventory;
 
 public enum InventoryType {
 	CHEST(0),

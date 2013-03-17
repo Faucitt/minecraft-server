@@ -1,5 +1,8 @@
 package server.nbt;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class TagByte extends Tag {
 
 	private int data;
@@ -15,6 +18,12 @@ public class TagByte extends Tag {
 
 	public void setData(int data) {
 		this.data = data;
+	}
+
+	@Override
+	public Tag read(InputStream in) throws IOException {
+		TagByte tag = new TagByte((byte) in.read());
+		return tag;
 	}
 	
 }

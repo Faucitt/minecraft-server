@@ -1,11 +1,16 @@
 package server.model.entity;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import server.io.MCSocket;
+import server.model.inventory.Slot;
+import server.nbt.Tag;
 import server.packet.StatusPacket.ClientStatus;
+import server.util.CompressionType;
 
 public abstract class EntityMetaData {
 	
@@ -76,6 +81,22 @@ public abstract class EntityMetaData {
 				break;
 				
 			case SLOT:
+				short itemId = socket.readShort();
+				if (itemId != -1) {
+					byte amount = socket.readByte();
+					short metaData = socket.readShort();
+					short nbtLength = socket.readShort();
+					Slot slot = new Slot();
+					if (nbtLength != -1) {
+						byte[] nbtData = socket.readByteArray();
+						GZIPInputStream input = new GZIPInputStream(new ByteArrayInputStream(nbtData));
+						List<Tag> nbtTags = Tag.parse(input, CompressionType.GZIP);
+						slot.setNbtTags(nbtTags);
+					}
+					slot.setId(itemId);
+					slot.setAmount(amount);
+					slot.setMetaData(metaData);
+				}
 				break;
 				
 			case POSITION:

@@ -1,10 +1,14 @@
 package server.model.inventory;
 
+import java.util.List;
+
+import server.nbt.Tag;
+
 public class Slot {
-	private short id, metadata;
+	private short id, metaData;
 	private byte amount;
 	
-	
+	private List<Tag> nbtTags;
 	
 	public short getId() {
 		return id;
@@ -12,17 +16,23 @@ public class Slot {
 	public void setId(short id) {
 		this.id = id;
 	}
-	public short getMetadata() {
-		return metadata;
+	public short getMetaData() {
+		return metaData;
 	}
-	public void setMetadata(short metadata) {
-		this.metadata = metadata;
+	public void setMetaData(short metaData) {
+		this.metaData = metaData;
 	}
 	public byte getAmount() {
 		return amount;
 	}
 	public void setAmount(byte amount) {
 		this.amount = amount;
+	}
+	public List<Tag> getNbtTags() {
+		return nbtTags;
+	}
+	public void setNbtTags(List<Tag> nbtTags) {
+		this.nbtTags = nbtTags;
 	}
 	
 }
