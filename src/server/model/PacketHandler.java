@@ -22,6 +22,10 @@ public class PacketHandler implements Runnable {
 	
 	public void handlePacket(byte packetId, MCSocket socket) throws IOException {
 		switch(packetId) {
+		case (byte) 0x00:
+			PingPacket pingPacket = PingPacket.read(socket);
+			System.out.println(pingPacket);
+			break;
 		case (byte) 0x03:
 			ChatPacket chatPacket = ChatPacket.read(socket);
 			String chatMessage = chatPacket.getMessage();
@@ -44,6 +48,16 @@ public class PacketHandler implements Runnable {
 			System.out.println(lookPacket);
 			break;
 		case (byte) 0x0D:
+			PositionLookPacket positionLookPacket = PositionLookPacket.read(socket);
+			System.out.println(positionLookPacket);
+			break;
+		case (byte) 0x0E:
+			DiggingPacket diggingPacket = DiggingPacket.read(socket);
+			System.out.println(diggingPacket);
+			break;
+		case (byte) 0x12:
+			AnimationPacket animationPacket = AnimationPacket.read(socket);
+			System.out.println(animationPacket);
 			break;
 		case (byte) 0xCC:
 			SettingsPacket settingsPacket = SettingsPacket.read(socket);
@@ -56,8 +70,6 @@ public class PacketHandler implements Runnable {
 		default:
 			System.out.println("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
 			throw new IOException("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
-			//break;
-			//throw new IOException("Unhandled packet " + Integer.toHexString(packetId));
 		}
 	}
 

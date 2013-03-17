@@ -19,7 +19,13 @@ public class PositionLookPacket extends Packet {
 	
 	public static PositionLookPacket read(MCSocket socket) throws IOException {
 		PositionLookPacket packet = new PositionLookPacket();
-		
+		packet.setX(socket.readDouble());
+		packet.setY(socket.readDouble());
+		packet.setStance(socket.readDouble());
+		packet.setZ(socket.readDouble());
+		packet.setYaw(socket.readFloat());
+		packet.setPitch(socket.readFloat());
+		packet.setFlying(socket.readByte() == 0);
 		return packet;
 	}
 

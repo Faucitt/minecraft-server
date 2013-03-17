@@ -20,9 +20,8 @@ public class PingPacket extends Packet {
 	}
 
 	public static PingPacket read(MCSocket socket) throws IOException {
-		int random = socket.readInt();
 		PingPacket packet = new PingPacket();
-		packet.setRandom(random);
+		packet.setRandom(socket.readInt());
 		return packet;
 	}
 

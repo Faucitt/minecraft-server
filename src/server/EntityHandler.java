@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import server.logging.Logger;
 import server.model.Entity;
 import server.model.Player;
 import server.packet.ChatPacket;
 import server.packet.Packet;
 
 public class EntityHandler {
+	private static final Logger logger = Logger.getLogger(EntityHandler.class.getName());
+	
 	public List<Entity> entities = new ArrayList<>();
 	public List<Player> players = new ArrayList<>();
 	
@@ -37,7 +40,9 @@ public class EntityHandler {
 		players.add(p);
 		
 		if (p.getUsername() == null) return;
-		ChatPacket packet = new ChatPacket("§e" + p.getUsername() + " has joined.");
+		String joinMessage = p.getUsername() + " has joined.";
+		ChatPacket packet = new ChatPacket("§e" + joinMessage);
+		logger.write(joinMessage);
 		for (Player player : players) {
 			if (player != p) player.pushPacket((Packet) packet);
 		}
@@ -48,7 +53,9 @@ public class EntityHandler {
 		entities.remove((Entity) p);
 		if (players.remove(p)) {
 			if (p.getUsername() == null) return;
-			ChatPacket packet = new ChatPacket("§e" + p.getUsername() + " has left.");
+			String leaveMessage = p.getUsername() + " has left.";
+			ChatPacket packet = new ChatPacket("§e" + leaveMessage);
+			logger.write(leaveMessage);
 			for (Player player : players) {
 				if (player != p) player.pushPacket((Packet) packet);
 			}

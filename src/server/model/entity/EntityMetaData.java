@@ -9,7 +9,6 @@ import java.util.zip.GZIPInputStream;
 import server.io.MCSocket;
 import server.model.inventory.Slot;
 import server.nbt.Tag;
-import server.packet.StatusPacket.ClientStatus;
 import server.util.CompressionType;
 
 public abstract class EntityMetaData {
@@ -23,7 +22,7 @@ public abstract class EntityMetaData {
 		SLOT(5),
 		POSITION(6);
 		
-		private static final MetaDataType[] types = new MetaDataType[2];
+		private static final MetaDataType[] types = new MetaDataType[7];
 		
 		static {
 			for (MetaDataType type : MetaDataType.values()) {
@@ -57,8 +56,8 @@ public abstract class EntityMetaData {
 	
 	public static List<EntityMetaData> readEntityMetaData(MCSocket socket) throws IOException {
 		List<EntityMetaData> list = new ArrayList<>();
-		
-		for (byte type = socket.readByte(); type != 127; type = socket.readByte()) {
+		for (byte type = socket.readByte(); !(type == 127 || type == 64); type = socket.readByte()) {
+			System.out.println(type);
 			switch(MetaDataType.getForId(type)) {
 			case BYTE:
 				list.add((EntityMetaData) new ByteMetaData(socket.readByte()));
