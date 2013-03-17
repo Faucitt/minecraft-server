@@ -33,7 +33,7 @@ public class TickHandler implements Runnable {
 			if (difference > 500) {
 				Thread.currentThread();
 				try {
-					Thread.sleep(difference/1000);
+					Thread.sleep(50000000-difference);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
