@@ -57,7 +57,6 @@ public abstract class EntityMetaData {
 	public static List<EntityMetaData> readEntityMetaData(MCSocket socket) throws IOException {
 		List<EntityMetaData> list = new ArrayList<>();
 		for (byte type = socket.readByte(); !(type == 127 || type == 64); type = socket.readByte()) {
-			System.out.println(type);
 			switch(MetaDataType.getForId(type)) {
 			case BYTE:
 				list.add((EntityMetaData) new ByteMetaData(socket.readByte()));

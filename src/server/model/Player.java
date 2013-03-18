@@ -53,9 +53,9 @@ public class Player extends Entity implements Runnable {
 		verificationToken = new byte[4];
 		rng.nextBytes(verificationToken);
 		
-		KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-		kpg.initialize(1024);
-		keyPair = kpg.generateKeyPair();
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+		keyPairGenerator.initialize(1024);
+		keyPair = keyPairGenerator.generateKeyPair();
 	}
 
 	public MCSocket getSocket() {

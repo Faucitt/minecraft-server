@@ -25,15 +25,15 @@ public class ChunkColumn {
 			pos += 16*16*16;
 		}
 		for (int y = 0; y < 16; y++) {
-			System.arraycopy(getChunk(y).getBlockIds(), 0, buffer, pos, 16*16*16);
+			System.arraycopy(getChunk(y).getBlockMetaData(), 0, buffer, pos, 16*16*16);
 			pos += 16*16*16;
 		}
 		for (int y = 0; y < 16; y++) {
-			System.arraycopy(getChunk(y).getBlockIds(), 0, buffer, pos, 16*16*8);
+			System.arraycopy(getChunk(y).getBlockLight(), 0, buffer, pos, 16*16*8);
 			pos += 16*16*8;
 		}
 		for (int y = 0; y < 16; y++) {
-			System.arraycopy(getChunk(y).getBlockIds(), 0, buffer, pos, 16*16*8);
+			System.arraycopy(getChunk(y).getBlockSunlight(), 0, buffer, pos, 16*16*8);
 			pos += 16*16*8;
 		}
 		for (int sx = 0; sx < 16; sx++) {
@@ -47,7 +47,6 @@ public class ChunkColumn {
 		deflater.setInput(buffer, 0, (16*16*16*16*3)+(16*16));
 		deflater.finish();
 		int length = deflater.deflate(compressedData);
-		System.out.println(length);
 		compressed = true;
 		this.compressedData = Arrays.copyOf(compressedData, length);
 		return this.compressedData;
