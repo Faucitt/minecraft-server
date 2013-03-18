@@ -18,11 +18,13 @@ import server.model.Player;
 import server.terrain.World;
 
 public class Server {
+	
 	private ServerSocket connectionListener;
 	private EntityHandler entityHandler;
 	private Configuration configuration;
 	private String serverId;
 	private int port;
+	
 	private List<World> worlds = new ArrayList<World>();
 
 	public static void main(String[] args) throws Exception {

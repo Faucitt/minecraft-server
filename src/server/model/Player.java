@@ -1,6 +1,11 @@
 package server.model;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.math.BigInteger;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -132,6 +137,14 @@ public class Player extends Entity implements Runnable {
 				if (responseId != ((byte) 0xFC)) throw new IOException("Unexpected packet. Expected 0xFC - EncryptionResponse");
 				EncryptionResponsePacket encryptResponse = EncryptionResponsePacket.read(socket);
 				SecretKey sharedKey = Cryptography.decryptSharedKey(keyPair.getPrivate(), encryptResponse.getSharedSecret());
+				
+				byte[] idBytes = Cryptography.getServerIdHash(server.getServerId(), keyPair.getPublic(), sharedKey);
+				String id = (new BigInteger(idBytes)).toString(16);
+	            URL url = new URL("http://session.minecraft.net/game/checkserver.jsp?user=" + URLEncoder.encode(username, "UTF-8") + "&serverId=" + URLEncoder.encode(id, "UTF-8"));
+	            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+	            String response = reader.readLine();
+	            reader.close();
+	            if (!response.equals("YES")) throw new IOException("Player not authenticated with minecraft.net.");
 				
 				//TODO: Check verification token is valid, prevents MITM attacks.
 				EncryptionResponsePacket emptyResponse = new EncryptionResponsePacket(new byte[] {}, new byte[] {});
