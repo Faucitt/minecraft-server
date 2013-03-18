@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import server.io.MCSocket;
 import server.io.packet.*;
+import server.logging.Logger;
 
 public class PacketHandler implements Runnable {
+	private static final Logger logger = Logger.getLogger(PacketHandler.class.getName());
 	private Player player;
 	
 	public PacketHandler(Player player) {
@@ -20,11 +22,11 @@ public class PacketHandler implements Runnable {
 		this.player = player;
 	}
 	
+	@SuppressWarnings("unused")
 	public void handlePacket(byte packetId, MCSocket socket) throws IOException {
 		switch(packetId) {
 		case (byte) 0x00:
 			PingPacket pingPacket = PingPacket.read(socket);
-			System.out.println(pingPacket);
 			break;
 		case (byte) 0x03:
 			ChatPacket chatPacket = ChatPacket.read(socket);
@@ -36,46 +38,40 @@ public class PacketHandler implements Runnable {
 				p.pushPacket(chatResponsePacket);
 			}
 			
-			System.out.println("<" + player.getUsername() + "> " + chatMessage);
+			logger.write(chatMessage);
 			break;
 		case (byte) 0x07:
 			UseEntityPacket useEntityPacket = UseEntityPacket.read(socket);
-			System.out.println(useEntityPacket);
 			break;
 		case (byte) 0x0A:
 			FlyingPacket flyingPacket = FlyingPacket.read(socket);
-			System.out.println(flyingPacket);
 			break;
 		case (byte) 0x0B:
 			PositionPacket positionPacket = PositionPacket.read(socket);
-			System.out.println(positionPacket);
 			break;
 		case (byte) 0x0C:
 			LookPacket lookPacket = LookPacket.read(socket);
-			System.out.println(lookPacket);
 			break;
 		case (byte) 0x0D:
 			PositionLookPacket positionLookPacket = PositionLookPacket.read(socket);
-			System.out.println(positionLookPacket);
 			break;
 		case (byte) 0x0E:
 			DiggingPacket diggingPacket = DiggingPacket.read(socket);
-			System.out.println(diggingPacket);
 			break;
 		case (byte) 0x12:
 			AnimationPacket animationPacket = AnimationPacket.read(socket);
-			System.out.println(animationPacket);
+			break;
+		case (byte) 0x13:
+			ActionPacket actionPacket = ActionPacket.read(socket);
 			break;
 		case (byte) 0xCC:
 			SettingsPacket settingsPacket = SettingsPacket.read(socket);
-			System.out.println(settingsPacket);
 			break;
 		case (byte) 0xCD:
 			StatusPacket statusPacket = StatusPacket.read(socket);
-			System.out.println(statusPacket);
 			break;
 		default:
-			System.out.println("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
+			logger.write("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
 			throw new IOException("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
 		}
 	}

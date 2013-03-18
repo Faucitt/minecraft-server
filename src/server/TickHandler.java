@@ -30,10 +30,10 @@ public class TickHandler implements Runnable {
 			/* End of per-tick calculations. */
 			
 			long difference = System.nanoTime()-time;
-			if (difference > 1000) {
+			if (difference > 0) {
 				Thread.currentThread();
 				try {
-					Thread.sleep((50000000-difference)/1000);
+					Thread.sleep((50000000-difference)/1000000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

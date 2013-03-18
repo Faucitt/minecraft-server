@@ -19,6 +19,7 @@ import server.Configuration;
 import server.Server;
 import server.io.Cryptography;
 import server.io.MCSocket;
+import server.io.packet.ChunkColumnPacket;
 import server.io.packet.DisconnectPacket;
 import server.io.packet.EncryptionRequestPacket;
 import server.io.packet.EncryptionResponsePacket;
@@ -147,6 +148,13 @@ public class Player extends Entity implements Runnable {
 				loginPacket.setMaxPlayers((byte) 32);
 				socket.writeByte(loginPacket.getId());
 				loginPacket.write(socket);
+				
+				
+				ChunkColumnPacket chunkPacket = new ChunkColumnPacket();
+				chunkPacket.setWorldAndChunkColumn(server.getWorlds().get(0), 0, 0);
+				socket.writeByte(chunkPacket.getId());
+				chunkPacket.write(socket);
+				
 				
 				FlyingPacket flyingPacket = new FlyingPacket(true);
 				socket.writeByte(flyingPacket.getId());

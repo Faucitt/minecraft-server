@@ -72,7 +72,13 @@ public class MCSocket {
 	
 	public void writeByteArray(byte[] data) throws IOException {
 		writeShort((short) data.length);
-		if (data.length > 32767) throw new IOException("Array too large.");
+		if (data.length > Short.MAX_VALUE) throw new IOException("Array too large.");
+		writeData(data);
+	}
+	
+	public void writeBigByteArray(byte[] data) throws IOException {
+		writeInt(data.length);
+		if (data.length > Integer.MAX_VALUE) throw new IOException("Array too large.");
 		writeData(data);
 	}
 	

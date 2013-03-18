@@ -47,7 +47,7 @@ public class Server {
 		
 		entityHandler = new EntityHandler();
 		connectionListener = new ServerSocket(port);
-		worlds.add(new World(0, 256, 256, 128));
+		worlds.add(new World(0, 8, 8));
 	}
 	
 	public void process() throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException {
@@ -59,6 +59,7 @@ public class Server {
 		while (true) {
 			Socket socket = connectionListener.accept();
 			
+			//1 minute timeout.
 			socket.setSoTimeout(60000);
 			
 			byte[] sharedSecret = new byte[16];
