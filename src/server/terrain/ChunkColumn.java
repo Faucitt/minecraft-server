@@ -10,6 +10,7 @@ public class ChunkColumn {
 	public ChunkColumn() {
 		for (int y = 0; y < 16; y++) {
 			chunks[y] = new Chunk();
+			chunks[y].generate(y);
 		}
 	}
 	

@@ -11,6 +11,8 @@ import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -35,13 +37,20 @@ import server.io.packet.Packet;
 import server.util.Encode;
 
 public class Player extends Entity implements Runnable {
+	
 	private MCSocket socket;
+	
 	private String username;
+	
 	private Server server;
+	
 	private byte[] verificationToken;
 	private KeyPair keyPair;
+	
 	private PacketHandler packetHandler;
 	private Queue<Packet> packetQueue = new ArrayBlockingQueue<Packet>(4096);
+	
+	private List<Player> players = new ArrayList<>();
 	
 	public Player(MCSocket socket, Server server) throws NoSuchAlgorithmException {
 		super();
@@ -56,6 +65,14 @@ public class Player extends Entity implements Runnable {
 		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 		keyPairGenerator.initialize(1024);
 		keyPair = keyPairGenerator.generateKeyPair();
+	}
+	
+	public boolean hasPlayer(Player player) {
+		return players.contains(player);
+	}
+	
+	public void addPlayer(Player player) {
+		
 	}
 
 	public MCSocket getSocket() {

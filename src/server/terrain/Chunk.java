@@ -1,22 +1,22 @@
 package server.terrain;
 
 public class Chunk {	
-	public Chunk() {
-		generate();
-	}
-	
-	public void generate() {
-		int y = 0;
-		for (int x = 0; x < 16; x++) {
-			for (int z = 0; z < 16; z++) {
-				setBlockId(x, y, z, (byte) 1);
+
+	public void generate(int chunkY) {
+		if (chunkY == 0) {
+			int y = 0;
+			for (int x = 0; x < 16; x++) {
+				for (int z = 0; z < 16; z++) {
+					setBlockId(x, y, z, (byte) 1);
+					setBlockLight(x, y+1, z, (byte) 15);
+				}
 			}
 		}
 	}
 	
 	private byte[] blockIds = new byte[16*16*16];
 	
-	public int getBlockId(int x, int y, int z) {
+	public byte getBlockId(int x, int y, int z) {
 		return blockIds[((y*16*16)+(z*16)+x)];
 	}
 	
@@ -30,8 +30,12 @@ public class Chunk {
 	
 	private byte[] blockMetaData = new byte[16*16*16];
 	
-	public int getBlockMetaData(int x, int y, int z) {
+	public byte getBlockMetaData(int x, int y, int z) {
 		return blockMetaData[((y*16*16)+(z*16)+x)];
+	}
+	
+	public void setBlockMetaData(int x, int y, int z, byte metaData) {
+		blockMetaData[((y*16*16)+(z*16)+x)] = metaData;
 	}
 	
 	public byte[] getBlockMetaData() {
@@ -40,9 +44,19 @@ public class Chunk {
 	
 	private byte[] blockLight = new byte[16*16*8];
 	
-	public int getBlockLight(int x, int y, int z) {
-		if ((x&1) == 1) return (blockLight[((y*16*8)+(z*8)+(x/2))]&0xF);
-		                return (blockLight[((y*16*8)+(z*8)+(x/2))]>>4 &0xF);
+	public byte getBlockLight(int x, int y, int z) {
+		if ((x&1) == 0) return (byte) ((blockLight[((y*16*8)+(z*8)+(x/2))]   ) &0x0F);
+		                return (byte) ((blockLight[((y*16*8)+(z*8)+(x/2))]>>4) &0x0F);
+	}
+	
+	public void setBlockLight(int x, int y, int z, byte light) {
+		if ((x&1) == 0) {
+			blockLight[((y*16*8)+(z*8)+(x/2))] &= 0xF0;
+			blockLight[((y*16*8)+(z*8)+(x/2))] |= light&0x0F;
+		} else {
+			blockLight[((y*16*8)+(z*8)+(x/2))] &= 0x0F;
+			blockLight[((y*16*8)+(z*8)+(x/2))] |= ((light&0x0F)<<4);
+		}
 	}
 	
 	public byte[] getBlockLight() {
@@ -51,9 +65,19 @@ public class Chunk {
 	
 	private byte[] blockSunlight = new byte[16*16*8];
 	
-	public int getBlockSunlight(int x, int y, int z) {
-		if ((x&1) == 1) return (blockSunlight[((y*16*8)+(z*8)+(x/2))]&0xF);
-		                return (blockSunlight[((y*16*8)+(z*8)+(x/2))]>>4 &0xF);
+	public byte getBlockSunlight(int x, int y, int z) {
+		if ((x&1) == 0) return (byte) (blockSunlight[((y*16*8)+(z*8)+(x/2))]&0xF);
+		                return (byte) (blockSunlight[((y*16*8)+(z*8)+(x/2))]>>4 &0xF);
+	}
+	
+	public void setBlockSunlight(int x, int y, int z, byte light) {
+		if ((x&1) == 0) {
+			blockSunlight[((y*16*8)+(z*8)+(x/2))] &= 0xF0;
+			blockSunlight[((y*16*8)+(z*8)+(x/2))] |= light&0x0F;
+		} else {
+			blockSunlight[((y*16*8)+(z*8)+(x/2))] &= 0x0F;
+			blockSunlight[((y*16*8)+(z*8)+(x/2))] |= ((light&0x0F)<<4);
+		}
 	}
 	
 	public byte[] getBlockSunlight() {
