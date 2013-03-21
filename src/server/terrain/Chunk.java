@@ -8,7 +8,7 @@ public class Chunk {
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
 					setBlockId(x, y, z, (byte) 1);
-					setBlockLight(x, y+1, z, (byte) 15);
+					setBlockSunlight(x, y+1, z, (byte) 15);
 				}
 			}
 		}
@@ -81,6 +81,6 @@ public class Chunk {
 	}
 	
 	public byte[] getBlockSunlight() {
-		return blockLight;
+		return blockSunlight;
 	}
 }

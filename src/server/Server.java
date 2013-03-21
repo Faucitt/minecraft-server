@@ -50,6 +50,9 @@ public class Server {
 		entityHandler = new EntityHandler();
 		connectionListener = new ServerSocket(port);
 		worlds.add(new World(0, 8, 8));
+		worlds.get(0).calculateLight();
+		worlds.get(0).calculateSunlight();
+		System.out.println("Done lighting.");
 	}
 	
 	public void process() throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException {
