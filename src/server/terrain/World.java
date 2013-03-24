@@ -106,24 +106,20 @@ public class World {
 		for (int x = 0; x < width; x++) {
 			for (int z = 0; z < length; z++) {
 				for (int y = height-2; y >=0; y--) {
-					if (x == 0 && z == 0) {
-						System.out.println(y);
-						System.out.println(getBlockId(x, y, z));
-					}
 					updateSunlight(x, y+1, z, (byte) 15);
 					if (!Block.getLightFilters().containsKey(getBlockId(x, y, z))) break;
 					if (Block.getLightFilters().get(getBlockId(x, y, z)) != 0) break;
 				}
 			}
 		}
-		System.out.println(getBlockSunlight(0, 1, 0));
 	}
 	
 	public void updateLight(int x, int y, int z, byte level) {
+		//System.out.println("Light: " + x + ", " + y + ", " + z + ": " + level);
 		if (Block.getLightFilters().containsKey(getBlockId(x, y, z))) {
 			byte reduction = Block.getLightFilters().get(getBlockId(x, y, z));
 			byte light = (byte) (level - reduction);
-			if (light > 0 && light > getBlockLight(x, y, z)) {
+			if (light > getBlockLight(x, y, z)) {
 				setBlockLight(x, y, z, light);
 				if (light > 1) {
 					if (x > 0) updateLight(x-1, y, z, (byte) (light-1));
@@ -141,7 +137,7 @@ public class World {
 		if (Block.getLightFilters().containsKey(getBlockId(x, y, z))) {
 			byte reduction = Block.getLightFilters().get(getBlockId(x, y, z));
 			byte light = (byte) (level - reduction);
-			if (light > 0 && light > getBlockSunlight(x, y, z)) {
+			if (light > getBlockSunlight(x, y, z)) {
 				setBlockSunlight(x, y, z, light);
 				if (light > 1) {
 					if (x > 0) updateSunlight(x-1, y, z, (byte) (light-1));

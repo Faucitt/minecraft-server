@@ -24,6 +24,7 @@ public class Server {
 	private Configuration configuration;
 	private String serverId;
 	private int port;
+	private long time;
 	
 	private List<World> worlds = new ArrayList<World>();
 
@@ -49,6 +50,7 @@ public class Server {
 		
 		entityHandler = new EntityHandler();
 		connectionListener = new ServerSocket(port);
+		
 		worlds.add(new World(0, 8, 8));
 		worlds.get(0).calculateLight();
 		worlds.get(0).calculateSunlight();
@@ -126,6 +128,18 @@ public class Server {
 
 	public void setConfiguration(Configuration configuration) {
 		this.configuration = configuration;
+	}
+
+	public long getTime() {
+		return time;
+	}
+
+	public void setTime(long time) {
+		this.time = time;
+	}
+	
+	public void incrementTime() {
+		time++;
 	}
 
 }

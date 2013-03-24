@@ -39,6 +39,7 @@ public class TickHandler implements Runnable {
 				}
 			}
 			tick++;
+			server.incrementTime();
 		}
 	}
 

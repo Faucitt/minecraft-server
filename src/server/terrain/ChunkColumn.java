@@ -21,28 +21,34 @@ public class ChunkColumn {
 		if (compressed) return compressedData;
 		byte[] buffer = new byte[(16*16*16*16*3)+(16*16)];
 		int pos = 0;
+		
 		for (int y = 0; y < 16; y++) {
 			System.arraycopy(getChunk(y).getBlockIds(), 0, buffer, pos, 16*16*16);
 			pos += 16*16*16;
 		}
+		
 		for (int y = 0; y < 16; y++) {
-			System.arraycopy(getChunk(y).getBlockMetaData(), 0, buffer, pos, 16*16*16);
-			pos += 16*16*16;
+			System.arraycopy(getChunk(y).getBlockMetaData(), 0, buffer, pos, 16*16*8);
+			pos += 16*16*8;
 		}
+		
 		for (int y = 0; y < 16; y++) {
 			System.arraycopy(getChunk(y).getBlockLight(), 0, buffer, pos, 16*16*8);
 			pos += 16*16*8;
 		}
+		
 		for (int y = 0; y < 16; y++) {
 			System.arraycopy(getChunk(y).getBlockSunlight(), 0, buffer, pos, 16*16*8);
 			pos += 16*16*8;
 		}
+		
 		for (int sx = 0; sx < 16; sx++) {
 			for (int sz = 0; sz < 16; sz++) {
 				buffer[pos] = biomes[sx][sz];
 				pos++;
 			}
 		}
+		
 		byte[] compressedData = new byte[(16*16*16*16*3)+(16*16)];
 		Deflater deflater = new Deflater();
 		deflater.setInput(buffer, 0, (16*16*16*16*3)+(16*16));

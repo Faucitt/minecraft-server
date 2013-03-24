@@ -34,6 +34,7 @@ import server.io.packet.FlyingPacket;
 import server.io.packet.HandshakePacket;
 import server.io.packet.LoginPacket;
 import server.io.packet.Packet;
+import server.io.packet.TimePacket;
 import server.util.Encode;
 
 public class Player extends Entity implements Runnable {
@@ -161,7 +162,7 @@ public class Player extends Entity implements Runnable {
 	            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 	            String response = reader.readLine();
 	            reader.close();
-	            if (!response.equals("YES")) throw new IOException("Player not authenticated with minecraft.net.");
+	            //if (!response.equals("YES")) throw new IOException("Player not authenticated with minecraft.net.");
 				
 				//TODO: Check verification token is valid, prevents MITM attacks.
 				EncryptionResponsePacket emptyResponse = new EncryptionResponsePacket(new byte[] {}, new byte[] {});
@@ -184,6 +185,10 @@ public class Player extends Entity implements Runnable {
 				chunkPacket.setWorldAndChunkColumn(server.getWorlds().get(0), 0, 0);
 				socket.writeByte(chunkPacket.getId());
 				chunkPacket.write(socket);
+				
+				TimePacket timePacket = new TimePacket(18000);
+				socket.writeByte(timePacket.getId());
+				timePacket.write(socket);
 				
 				
 				FlyingPacket flyingPacket = new FlyingPacket(true);
