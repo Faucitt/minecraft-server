@@ -4,22 +4,25 @@ import java.io.IOException;
 
 import server.io.MCSocket;
 
-public class EntityLook extends Packet {
+public class EntityTeleportPacket extends Packet {
 
-	public EntityLook() {
-		super((byte) 0x20);
+	public EntityTeleportPacket() {
+		super((byte) 0x22);
 	}
-
-	private int entityId;
-	private byte yaw, pitch;
 	
+	private int entityId, x, y, z;
+	private byte yaw, pitch;
+
 	@Override
 	public void write(MCSocket socket) throws IOException {
 		socket.writeInt(entityId);
+		socket.writeInt(x);
+		socket.writeInt(y);
+		socket.writeInt(z);
 		socket.writeByte(yaw);
 		socket.writeByte(pitch);
 	}
-
+	
 	public int getEntityId() {
 		return entityId;
 	}
@@ -51,4 +54,29 @@ public class EntityLook extends Packet {
 	public void setPitch(float pitch) {
 		this.pitch = (byte) ((256*pitch)/(Math.PI*2));
 	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public int getZ() {
+		return z;
+	}
+
+	public void setZ(int z) {
+		this.z = z;
+	}
+
 }
