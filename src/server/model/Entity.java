@@ -4,7 +4,10 @@ public abstract class Entity {
 	public static int nextId;
 	
 	private double x, y, z, vx, vy, vz;
+	private double lastX, lastY, lastZ;
 	private int id;
+	private float yaw, pitch;
+	private float lastYaw, lastPitch;
 	
 	public Entity() {
 		this.setId(nextId);
@@ -65,6 +68,62 @@ public abstract class Entity {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public float getYaw() {
+		return yaw;
+	}
+
+	public void setYaw(float yaw) {
+		this.yaw = yaw;
+	}
+
+	public float getPitch() {
+		return pitch;
+	}
+
+	public void setPitch(float pitch) {
+		this.pitch = pitch;
+	}
+
+	public double getLastX() {
+		return lastX;
+	}
+
+	public void setLastX(double lastX) {
+		this.lastX = lastX;
+	}
+
+	public double getLastY() {
+		return lastY;
+	}
+
+	public void setLastY(double lastY) {
+		this.lastY = lastY;
+	}
+
+	public double getLastZ() {
+		return lastZ;
+	}
+
+	public void setLastZ(double lastZ) {
+		this.lastZ = lastZ;
+	}
+
+	public float getLastYaw() {
+		return lastYaw;
+	}
+
+	public void setLastYaw(float lastYaw) {
+		this.lastYaw = lastYaw;
+	}
+
+	public float getLastPitch() {
+		return lastPitch;
+	}
+
+	public void setLastPitch(float lastPitch) {
+		this.lastPitch = lastPitch;
 	}
 	
 	

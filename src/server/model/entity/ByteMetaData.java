@@ -1,10 +1,14 @@
 package server.model.entity;
 
+import java.io.IOException;
+
+import server.io.MCSocket;
+
 public class ByteMetaData extends EntityMetaData {
 	private byte data;
 	
-	public ByteMetaData(byte data) {
-		super(MetaDataType.BYTE);
+	public ByteMetaData(byte data, byte meta) {
+		super(MetaDataType.BYTE, meta);
 		setData(data);
 	}
 
@@ -14,5 +18,11 @@ public class ByteMetaData extends EntityMetaData {
 
 	public void setData(byte data) {
 		this.data = data;
+	}
+
+	@Override
+	public void write(MCSocket socket) throws IOException {
+		socket.writeByte((byte) (this.getType().getId() | (this.getMeta()<<5)));
+		socket.writeByte(data);
 	}
 }

@@ -36,7 +36,7 @@ public class EntityHandler {
 	
 	public void addPlayer(Player p) {
 		if (p == null) return;
-		entities.add((Entity) p);
+		//entities.add((Entity) p);
 		players.add(p);
 		
 		if (p.getUsername() == null) return;
@@ -50,7 +50,7 @@ public class EntityHandler {
 	
 	public void removePlayer(Player p) {
 		if (p == null) return;
-		entities.remove((Entity) p);
+		//entities.remove((Entity) p);
 		if (players.remove(p)) {
 			if (p.getUsername() == null) return;
 			String leaveMessage = p.getUsername() + " has left.";

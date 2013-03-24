@@ -1,5 +1,8 @@
 package server;
 
+import java.io.IOException;
+import java.util.Iterator;
+
 import server.io.packet.PingPacket;
 import server.model.Player;
 
@@ -22,8 +25,17 @@ public class TickHandler implements Runnable {
 			//Send ping packets to every player every 20 ticks (1 second).
 			if (tick%20 == 0) {
 				PingPacket pingPacket = new PingPacket();
-				for (Player player : server.getEntityHandler().getPlayers()) {
+				Iterator<Player> iterator = server.getEntityHandler().getPlayerIterator();
+				while (iterator.hasNext()) {
+					Player player = iterator.next();
+					if (player == null) continue;
 					player.pushPacket(pingPacket);
+					try {
+						player.checkPlayers();
+					} catch (IOException e) {
+						//TODO Panic!
+						e.printStackTrace();
+					}
 				}
 			}
 			

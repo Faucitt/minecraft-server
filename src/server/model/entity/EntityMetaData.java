@@ -20,9 +20,10 @@ public abstract class EntityMetaData {
 		FLOAT(3),
 		STRING(4),
 		SLOT(5),
-		POSITION(6);
+		POSITION(6),
+		END(7);
 		
-		private static final MetaDataType[] types = new MetaDataType[7];
+		private static final MetaDataType[] types = new MetaDataType[8];
 		
 		static {
 			for (MetaDataType type : MetaDataType.values()) {
@@ -46,7 +47,8 @@ public abstract class EntityMetaData {
 	}
 	
 	MetaDataType type;
-	public EntityMetaData(MetaDataType type) {
+	private byte meta;
+	public EntityMetaData(MetaDataType type, byte meta) {
 		this.type = type;
 	}
 	
@@ -54,28 +56,30 @@ public abstract class EntityMetaData {
 		return type;
 	}
 	
+	public abstract void write(MCSocket socket) throws IOException;
+	
 	public static List<EntityMetaData> readEntityMetaData(MCSocket socket) throws IOException {
 		List<EntityMetaData> list = new ArrayList<>();
 		for (byte type = socket.readByte(); !(type == 127 || type == 64); type = socket.readByte()) {
-			switch(MetaDataType.getForId(type)) {
+			switch(MetaDataType.getForId(type&0x1f)) {
 			case BYTE:
-				list.add((EntityMetaData) new ByteMetaData(socket.readByte()));
+				list.add((EntityMetaData) new ByteMetaData(socket.readByte(), (byte) (type>>>5)));
 				break;
 				
 			case SHORT:
-				list.add((EntityMetaData) new ShortMetaData(socket.readShort()));
+				list.add((EntityMetaData) new ShortMetaData(socket.readShort(), (byte) (type>>>5)));
 				break;
 				
 			case INT:
-				list.add((EntityMetaData) new IntMetaData(socket.readInt()));
+				list.add((EntityMetaData) new IntMetaData(socket.readInt(), (byte) (type>>>5)));
 				break;
 				
 			case FLOAT:
-				list.add((EntityMetaData) new FloatMetaData(socket.readFloat()));
+				list.add((EntityMetaData) new FloatMetaData(socket.readFloat(), (byte) (type>>>5)));
 				break;
 				
 			case STRING:
-				list.add((EntityMetaData) new StringMetaData(socket.readString()));
+				list.add((EntityMetaData) new StringMetaData(socket.readString(), (byte) (type>>>5)));
 				break;
 				
 			case SLOT:
@@ -98,11 +102,19 @@ public abstract class EntityMetaData {
 				break;
 				
 			case POSITION:
-				list.add((EntityMetaData) new PositionMetaData(socket.readInt(), socket.readInt(), socket.readInt()));
+				list.add((EntityMetaData) new PositionMetaData(socket.readInt(), socket.readInt(), socket.readInt(), (byte) (type>>>5)));
 				break;
 			}
 		}
 		
 		return list;
+	}
+
+	public byte getMeta() {
+		return meta;
+	}
+
+	public void setMeta(byte meta) {
+		this.meta = meta;
 	}
 }

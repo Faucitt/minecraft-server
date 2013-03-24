@@ -12,6 +12,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
@@ -34,6 +35,7 @@ import server.io.packet.FlyingPacket;
 import server.io.packet.HandshakePacket;
 import server.io.packet.LoginPacket;
 import server.io.packet.Packet;
+import server.io.packet.SpawnPlayerPacket;
 import server.io.packet.TimePacket;
 import server.util.Encode;
 
@@ -73,7 +75,48 @@ public class Player extends Entity implements Runnable {
 	}
 	
 	public void addPlayer(Player player) {
+		players.add(player);
+	}
+	
+	public void checkPlayers() throws IOException {
+		Iterator<Player> iterator = server.getEntityHandler().getPlayerIterator();
 		
+		while (iterator.hasNext()) {
+			Player player = iterator.next();
+			if (player == null) continue;
+			if (player == this) continue;
+			
+			if (player.getEuclideanDistance(this) <= 168) {
+				if (!hasPlayer(player)) {
+					players.add(player);
+					
+					SpawnPlayerPacket spawnPlayerPacket = new SpawnPlayerPacket();
+					spawnPlayerPacket.setName(player.getUsername());
+					spawnPlayerPacket.setEntityId(player.getId());
+					spawnPlayerPacket.setX(player.getX());
+					spawnPlayerPacket.setY(player.getY());
+					spawnPlayerPacket.setZ(player.getZ());
+					spawnPlayerPacket.setYaw(player.getYaw());
+					spawnPlayerPacket.setPitch(player.getPitch());
+					
+					pushPacket(spawnPlayerPacket);
+				}
+			} else {
+				if (hasPlayer(player)) {
+					players.remove(player);
+					
+					//TODO send remove entity packet.
+				}
+			}
+		}
+	}
+
+	private double getEuclideanDistance(Player player) {
+		return Math.sqrt(((this.getX()-player.getX())*(this.getX()-player.getX())) + ((this.getZ()-player.getZ())*(this.getZ()-player.getZ())));
+	}
+	
+	private double getDistance(Player player) {
+		return Math.sqrt(((this.getX()-player.getX())*(this.getX()-player.getX())) + ((this.getZ()-player.getZ())*(this.getZ()-player.getZ())) + ((this.getY()-player.getY())*(this.getY()-player.getY())));
 	}
 
 	public MCSocket getSocket() {
@@ -189,6 +232,14 @@ public class Player extends Entity implements Runnable {
 				TimePacket timePacket = new TimePacket(18000);
 				socket.writeByte(timePacket.getId());
 				timePacket.write(socket);
+				
+				SpawnPlayerPacket spawnPlayerPacket = new SpawnPlayerPacket();
+				spawnPlayerPacket.setY(1);
+				spawnPlayerPacket.setName("Jonneh");
+				spawnPlayerPacket.setEntityId(170571);
+				spawnPlayerPacket.setItemId((short) 276);
+				socket.writeByte(spawnPlayerPacket.getId());
+				spawnPlayerPacket.write(socket);
 				
 				
 				FlyingPacket flyingPacket = new FlyingPacket(true);
