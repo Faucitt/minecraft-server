@@ -38,6 +38,7 @@ import server.io.packet.LoginPacket;
 import server.io.packet.Packet;
 import server.io.packet.SpawnPlayerPacket;
 import server.io.packet.TimePacket;
+import server.terrain.World;
 import server.util.Encode;
 
 public class Player extends Entity implements Runnable {
@@ -47,6 +48,9 @@ public class Player extends Entity implements Runnable {
 	private String username;
 	
 	private Server server;
+	
+	private int lastChunkX, lastChunkZ;
+	private World world;
 	
 	private byte[] verificationToken;
 	private KeyPair keyPair;
@@ -111,6 +115,101 @@ public class Player extends Entity implements Runnable {
 					
 					pushPacket(destroyPacket);
 				}
+			}
+		}
+	}
+	
+	public void checkChunks() throws IOException {
+		if (world == null) throw new IOException("Player " + username + " was in a null world.");
+		
+		int chunkX = (int) (getX()/16);
+		int chunkZ = (int) (getZ()/16);
+		
+		if (chunkX != lastChunkX && chunkZ != lastChunkZ) {
+			int range = server.getConfiguration().getChunkRange();
+			
+			if (chunkX > lastChunkX) {
+				 for (int offset = -range; offset <= range; offset++) {
+					 if (chunkX+range < 0 || chunkX+range >= world.getSizeX()) continue;
+					 if (chunkZ+offset < 0 || chunkZ+offset >= world.getSizeZ()) continue;
+					 
+					 ChunkColumnPacket packet = new ChunkColumnPacket();
+					 packet.setWorldAndChunkColumn(world, chunkX+range, chunkZ+offset);
+					 pushPacket(packet);
+				 }
+			} else {
+				 for (int offset = -range; offset <= range; offset++) {
+					 if (chunkX-range < 0 || chunkX-range >= world.getSizeX()) continue;
+					 if (chunkZ+offset < 0 || chunkZ+offset >= world.getSizeZ()) continue;
+					 
+					 ChunkColumnPacket packet = new ChunkColumnPacket();
+					 packet.setWorldAndChunkColumn(world, chunkX-range, chunkZ+offset);
+					 pushPacket(packet);
+				 }
+			}
+			
+			if (chunkZ > lastChunkZ) {
+				 for (int offset = -range; offset <= range; offset++) {
+					 if (chunkX+offset < 0 || chunkX+offset >= world.getSizeX()) continue;
+					 if (chunkZ+range < 0 || chunkZ+range >= world.getSizeZ()) continue;
+					 
+					 ChunkColumnPacket packet = new ChunkColumnPacket();
+					 packet.setWorldAndChunkColumn(world, chunkX+offset, chunkZ+range);
+					 pushPacket(packet);
+				 }
+			} else {
+				 for (int offset = -range; offset <= range; offset++) {
+					 if (chunkX+offset < 0 || chunkX+offset >= world.getSizeX()) continue;
+					 if (chunkZ-range < 0 || chunkZ-range >= world.getSizeZ()) continue;
+					 
+					 ChunkColumnPacket packet = new ChunkColumnPacket();
+					 packet.setWorldAndChunkColumn(world, chunkX+offset, chunkZ-range);
+					 pushPacket(packet);
+				 }
+			}
+		} else if (chunkX != lastChunkX) {
+			int range = server.getConfiguration().getChunkRange();
+			
+			if (chunkX > lastChunkX) {
+				 for (int offset = -range; offset <= range; offset++) {
+					 if (chunkX+range < 0 || chunkX+range >= world.getSizeX()) continue;
+					 if (chunkZ+offset < 0 || chunkZ+offset >= world.getSizeZ()) continue;
+					 
+					 ChunkColumnPacket packet = new ChunkColumnPacket();
+					 packet.setWorldAndChunkColumn(world, chunkX+range, chunkZ+offset);
+					 pushPacket(packet);
+				 }
+			} else {
+				 for (int offset = -range; offset <= range; offset++) {
+					 if (chunkX-range < 0 || chunkX-range >= world.getSizeX()) continue;
+					 if (chunkZ+offset < 0 || chunkZ+offset >= world.getSizeZ()) continue;
+					 
+					 ChunkColumnPacket packet = new ChunkColumnPacket();
+					 packet.setWorldAndChunkColumn(world, chunkX-range, chunkZ+offset);
+					 pushPacket(packet);
+				 }
+			}
+		} else if (chunkZ != lastChunkZ) {
+			int range = server.getConfiguration().getChunkRange();
+			
+			if (chunkZ > lastChunkZ) {
+				 for (int offset = -range; offset <= range; offset++) {
+					 if (chunkX+offset < 0 || chunkX+offset >= world.getSizeX()) continue;
+					 if (chunkZ+range < 0 || chunkZ+range >= world.getSizeZ()) continue;
+					 
+					 ChunkColumnPacket packet = new ChunkColumnPacket();
+					 packet.setWorldAndChunkColumn(world, chunkX+offset, chunkZ+range);
+					 pushPacket(packet);
+				 }
+			} else {
+				 for (int offset = -range; offset <= range; offset++) {
+					 if (chunkX+offset < 0 || chunkX+offset >= world.getSizeX()) continue;
+					 if (chunkZ-range < 0 || chunkZ-range >= world.getSizeZ()) continue;
+					 
+					 ChunkColumnPacket packet = new ChunkColumnPacket();
+					 packet.setWorldAndChunkColumn(world, chunkX+offset, chunkZ-range);
+					 pushPacket(packet);
+				 }
 			}
 		}
 	}
@@ -241,6 +340,8 @@ public class Player extends Entity implements Runnable {
 				socket.writeByte(flyingPacket.getId());
 				flyingPacket.write(socket);
 				
+				world = server.getWorlds().get(0);
+				
 				server.getEntityHandler().addPlayer(this);
 				break;
 			}
@@ -274,5 +375,29 @@ public class Player extends Entity implements Runnable {
 
 	public void setServer(Server server) {
 		this.server = server;
+	}
+
+	public int getLastChunkX() {
+		return lastChunkX;
+	}
+
+	public void setLastChunkX(int lastChunkX) {
+		this.lastChunkX = lastChunkX;
+	}
+
+	public int getLastChunkZ() {
+		return lastChunkZ;
+	}
+
+	public void setLastChunkZ(int lastChunkZ) {
+		this.lastChunkZ = lastChunkZ;
+	}
+
+	public World getWorld() {
+		return world;
+	}
+
+	public void setWorld(World world) {
+		this.world = world;
 	}
 }

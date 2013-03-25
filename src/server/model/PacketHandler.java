@@ -54,24 +54,31 @@ public class PacketHandler implements Runnable {
 			
 		case (byte) 0x0B:
 			PositionPacket positionPacket = PositionPacket.read(socket);
+		
 			player.setX(positionPacket.getX());
 			player.setY(positionPacket.getY());
 			player.setZ(positionPacket.getZ());
+			
+			player.checkChunks();
 			break;
 			
 		case (byte) 0x0C:
 			LookPacket lookPacket = LookPacket.read(socket);
+		
 			player.setYaw((float) ((lookPacket.getYaw()*Math.PI*2/360)%(Math.PI*2)));
 			player.setPitch((float) (lookPacket.getPitch()*Math.PI*2/360));
 			break;
 			
 		case (byte) 0x0D:
 			PositionLookPacket positionLookPacket = PositionLookPacket.read(socket);
+		
 			player.setX(positionLookPacket.getX());
 			player.setY(positionLookPacket.getY());
 			player.setZ(positionLookPacket.getZ());
 			player.setYaw((float) ((positionLookPacket.getYaw()*Math.PI*2/360)%(Math.PI*2)));
 			player.setPitch((float) (positionLookPacket.getPitch()*Math.PI*2/360));
+			
+			player.checkChunks();
 			break;
 			
 		case (byte) 0x0E:

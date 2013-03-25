@@ -5,9 +5,13 @@ public class World {
 	private ChunkColumn[][] chunkColumns;
 	private final int width, height, length;
 	
+	private int sizeX, sizeZ;
+	
 	public World(int dimension, int width, int length) {
 		this.width = width*16;
 		this.length = length*16;
+		sizeX = width;
+		sizeZ = length;
 		this.height = 256;
 		setDimension(dimension);
 		setChunkColumns(new ChunkColumn[width][length]);
@@ -148,5 +152,21 @@ public class World {
 				}
 			}
 		}
+	}
+
+	public int getSizeX() {
+		return sizeX;
+	}
+
+	public void setSizeX(int sizeX) {
+		this.sizeX = sizeX;
+	}
+
+	public int getSizeZ() {
+		return sizeZ;
+	}
+
+	public void setSizeZ(int sizeZ) {
+		this.sizeZ = sizeZ;
 	}
 }

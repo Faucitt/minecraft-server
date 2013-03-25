@@ -68,8 +68,8 @@ public class Server {
 		while (true) {
 			Socket socket = connectionListener.accept();
 			
-			//1 minute timeout.
-			socket.setSoTimeout(60000);
+			//10 second timeout.
+			socket.setSoTimeout(10000);
 			
 			byte[] sharedSecret = new byte[16];
 			SecureRandom rng = new SecureRandom();
