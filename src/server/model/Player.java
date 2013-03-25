@@ -104,7 +104,6 @@ public class Player extends Entity implements Runnable {
 				}
 			} else {
 				if (hasPlayer(player)) {
-					System.out.println("REMOVE " + player.getUsername());
 					players.remove(player);
 					
 					DestroyEntitiesPacket destroyPacket = new DestroyEntitiesPacket();
