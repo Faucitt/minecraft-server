@@ -1,9 +1,11 @@
 package server.model;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import server.io.MCSocket;
 import server.io.packet.*;
+import server.io.packet.AnimationPacket.Animation;
 import server.logging.Logger;
 
 public class PacketHandler implements Runnable {
@@ -59,8 +61,8 @@ public class PacketHandler implements Runnable {
 			
 		case (byte) 0x0C:
 			LookPacket lookPacket = LookPacket.read(socket);
-			player.setYaw((float) (((lookPacket.getYaw()*Math.PI*2/360)-(Math.PI/2))%(Math.PI*2)));
-			player.setPitch((float) ((lookPacket.getPitch()*Math.PI*2/360)));
+			player.setYaw((float) ((lookPacket.getYaw()*Math.PI*2/360)%(Math.PI*2)));
+			player.setPitch((float) (lookPacket.getPitch()*Math.PI*2/360));
 			break;
 			
 		case (byte) 0x0D:
@@ -68,8 +70,8 @@ public class PacketHandler implements Runnable {
 			player.setX(positionLookPacket.getX());
 			player.setY(positionLookPacket.getY());
 			player.setZ(positionLookPacket.getZ());
-			player.setYaw((float) (((positionLookPacket.getYaw()*Math.PI*2/360)-(Math.PI/2))%(Math.PI*2)));
-			player.setPitch((float) ((positionLookPacket.getPitch()*Math.PI*2/360)));
+			player.setYaw((float) ((positionLookPacket.getYaw()*Math.PI*2/360)%(Math.PI*2)));
+			player.setPitch((float) (positionLookPacket.getPitch()*Math.PI*2/360));
 			break;
 			
 		case (byte) 0x0E:
@@ -78,6 +80,21 @@ public class PacketHandler implements Runnable {
 			
 		case (byte) 0x12:
 			AnimationPacket animationPacket = AnimationPacket.read(socket);
+		
+			if (animationPacket.getAnimation() == Animation.SWING) {
+				AnimationPacket swingPacket = new AnimationPacket();
+				swingPacket.setAnimation(Animation.SWING);
+				swingPacket.setEntityId(player.getId());
+				
+				Iterator<Player> iterator = player.getServer().getEntityHandler().getPlayerIterator();
+				while (iterator.hasNext()) {
+					Player player = iterator.next();
+					if (player == null) continue;
+					if (player == this.player) continue;
+					
+					if (player.hasPlayer(this.player)) player.pushPacket(swingPacket);
+				}
+			}
 			break;
 			
 		case (byte) 0x13:

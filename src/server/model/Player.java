@@ -28,6 +28,7 @@ import server.Server;
 import server.io.Cryptography;
 import server.io.MCSocket;
 import server.io.packet.ChunkColumnPacket;
+import server.io.packet.DestroyEntitiesPacket;
 import server.io.packet.DisconnectPacket;
 import server.io.packet.EncryptionRequestPacket;
 import server.io.packet.EncryptionResponsePacket;
@@ -103,9 +104,13 @@ public class Player extends Entity implements Runnable {
 				}
 			} else {
 				if (hasPlayer(player)) {
+					System.out.println("REMOVE " + player.getUsername());
 					players.remove(player);
 					
-					//TODO send remove entity packet.
+					DestroyEntitiesPacket destroyPacket = new DestroyEntitiesPacket();
+					destroyPacket.setEntityIds(new int[] {player.getId()});
+					
+					pushPacket(destroyPacket);
 				}
 			}
 		}
@@ -115,9 +120,9 @@ public class Player extends Entity implements Runnable {
 		return Math.sqrt(((this.getX()-player.getX())*(this.getX()-player.getX())) + ((this.getZ()-player.getZ())*(this.getZ()-player.getZ())));
 	}
 	
-	private double getDistance(Player player) {
-		return Math.sqrt(((this.getX()-player.getX())*(this.getX()-player.getX())) + ((this.getZ()-player.getZ())*(this.getZ()-player.getZ())) + ((this.getY()-player.getY())*(this.getY()-player.getY())));
-	}
+	//private double getDistance(Player player) {
+	//	return Math.sqrt(((this.getX()-player.getX())*(this.getX()-player.getX())) + ((this.getZ()-player.getZ())*(this.getZ()-player.getZ())) + ((this.getY()-player.getY())*(this.getY()-player.getY())));
+	//}
 
 	public MCSocket getSocket() {
 		return socket;
@@ -205,7 +210,7 @@ public class Player extends Entity implements Runnable {
 	            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 	            String response = reader.readLine();
 	            reader.close();
-	            //if (!response.equals("YES")) throw new IOException("Player not authenticated with minecraft.net.");
+	            if (!response.equals("YES")) throw new IOException("Player not authenticated with minecraft.net.");
 				
 				//TODO: Check verification token is valid, prevents MITM attacks.
 				EncryptionResponsePacket emptyResponse = new EncryptionResponsePacket(new byte[] {}, new byte[] {});
@@ -232,15 +237,6 @@ public class Player extends Entity implements Runnable {
 				TimePacket timePacket = new TimePacket(18000);
 				socket.writeByte(timePacket.getId());
 				timePacket.write(socket);
-				
-				SpawnPlayerPacket spawnPlayerPacket = new SpawnPlayerPacket();
-				spawnPlayerPacket.setY(1);
-				spawnPlayerPacket.setName("Jonneh");
-				spawnPlayerPacket.setEntityId(170571);
-				spawnPlayerPacket.setItemId((short) 276);
-				socket.writeByte(spawnPlayerPacket.getId());
-				spawnPlayerPacket.write(socket);
-				
 				
 				FlyingPacket flyingPacket = new FlyingPacket(true);
 				socket.writeByte(flyingPacket.getId());

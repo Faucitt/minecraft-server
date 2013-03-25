@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import server.io.packet.ChatPacket;
+import server.io.packet.DestroyEntitiesPacket;
 import server.io.packet.Packet;
 import server.logging.Logger;
 import server.model.Entity;
@@ -36,27 +37,47 @@ public class EntityHandler {
 	
 	public void addPlayer(Player p) {
 		if (p == null) return;
-		//entities.add((Entity) p);
+
 		players.add(p);
 		
 		if (p.getUsername() == null) return;
+		
 		String joinMessage = p.getUsername() + " has joined.";
 		ChatPacket packet = new ChatPacket("§e" + joinMessage);
+		
 		logger.write(joinMessage);
-		for (Player player : players) {
+		
+		Iterator<Player> iterator = getPlayerIterator();
+		
+		while (iterator.hasNext()) {
+			Player player = iterator.next();
+			if (player == null) continue;
+			
 			if (player != p) player.pushPacket((Packet) packet);
 		}
 	}
 	
 	public void removePlayer(Player p) {
 		if (p == null) return;
-		//entities.remove((Entity) p);
+
 		if (players.remove(p)) {
 			if (p.getUsername() == null) return;
+			
 			String leaveMessage = p.getUsername() + " has left.";
 			ChatPacket packet = new ChatPacket("§e" + leaveMessage);
+			
+			DestroyEntitiesPacket destroyPacket = new DestroyEntitiesPacket();
+			destroyPacket.setEntityIds(new int[] {p.getId()});
+			
 			logger.write(leaveMessage);
-			for (Player player : players) {
+			
+			Iterator<Player> iterator = getPlayerIterator();
+			
+			while (iterator.hasNext()) {
+				Player player = iterator.next();
+				if (player == null) continue;
+				
+				if (player.hasPlayer(p)) player.pushPacket(destroyPacket);
 				if (player != p) player.pushPacket((Packet) packet);
 			}
 		}

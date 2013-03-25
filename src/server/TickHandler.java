@@ -7,6 +7,7 @@ import server.io.packet.EntityLookPacket;
 import server.io.packet.EntityMoveLookPacket;
 import server.io.packet.EntityMovePacket;
 import server.io.packet.EntityTeleportPacket;
+import server.io.packet.HeadYawPacket;
 import server.io.packet.Packet;
 import server.io.packet.PingPacket;
 import server.model.Player;
@@ -52,9 +53,28 @@ public class TickHandler implements Runnable {
 					if (player == null) continue;
 					
 					Packet sendPacket = null;
-					Packet headYaw = null;
 					
-					if (player.getYaw() != player.getLastYaw() || player.getPitch() != player.getLastPitch()) {
+					HeadYawPacket yawPacket = new HeadYawPacket();
+					yawPacket.setEntityId(player.getId());
+					yawPacket.setYaw(player.getYaw());
+					
+					if (tick%100 == 0) {
+						//Send teleport packet.
+						EntityTeleportPacket packet = new EntityTeleportPacket();
+						
+						packet.setEntityId(player.getId());
+						packet.setX((int) (player.getX()*32));
+						packet.setY((int) (player.getY()*32));
+						packet.setZ((int) (player.getZ()*32));
+						
+						player.setLastX(player.getX());
+						player.setLastY(player.getY());
+						player.setLastZ(player.getZ());
+						player.setLastYaw(player.getYaw());
+						player.setLastPitch(player.getPitch());
+						
+						sendPacket = (Packet) packet;
+					} else if (player.getYaw() != player.getLastYaw() || player.getPitch() != player.getLastPitch()) {
 						if (player.getX() != player.getLastX() || player.getY() != player.getLastY() || player.getZ() != player.getLastZ()) {
 							int dx = (int) ((player.getX()-player.getLastX())*32);
 							int dy = (byte) ((player.getY()-player.getLastY())*32);
@@ -154,9 +174,12 @@ public class TickHandler implements Runnable {
 							
 							if (player2 == null) continue;
 							if (player == player2) continue;
-							
 							if (player2.hasPlayer(player)) {
+								System.out.println(player.getUsername() + " to " + player2.getUsername());
 								player2.pushPacket(sendPacket);
+								if (yawPacket != null) {
+									player2.pushPacket((Packet) yawPacket);
+								}
 							}
 						}
 					}

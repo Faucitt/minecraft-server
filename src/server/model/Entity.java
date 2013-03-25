@@ -12,6 +12,7 @@ public abstract class Entity {
 	public Entity() {
 		this.setId(nextId);
 		nextId++;
+		if (nextId > -100 && nextId < 0) throw new RuntimeException("Ran out of entity ID's.");
 	}
 
 	public double getX() {
