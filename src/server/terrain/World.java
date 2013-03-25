@@ -115,7 +115,6 @@ public class World {
 	}
 	
 	public void updateLight(int x, int y, int z, byte level) {
-		//System.out.println("Light: " + x + ", " + y + ", " + z + ": " + level);
 		if (Block.getLightFilters().containsKey(getBlockId(x, y, z))) {
 			byte reduction = Block.getLightFilters().get(getBlockId(x, y, z));
 			byte light = (byte) (level - reduction);

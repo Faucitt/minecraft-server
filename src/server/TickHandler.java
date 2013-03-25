@@ -174,12 +174,10 @@ public class TickHandler implements Runnable {
 							
 							if (player2 == null) continue;
 							if (player == player2) continue;
+							
 							if (player2.hasPlayer(player)) {
-								System.out.println(player.getUsername() + " to " + player2.getUsername());
 								player2.pushPacket(sendPacket);
-								if (yawPacket != null) {
-									player2.pushPacket((Packet) yawPacket);
-								}
+								player2.pushPacket((Packet) yawPacket);
 							}
 						}
 					}

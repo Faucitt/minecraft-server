@@ -37,16 +37,13 @@ public class Chunk {
 	}
 	
 	public void setBlockMetaData(int x, int y, int z, byte data) {
-		System.out.println(Integer.toHexString(blockLight[((y*16*8)+(z*8)+(x/2))]));
 		if ((x&1) == 0) {
 			blockMetaData[((y*16*8)+(z*8)+(x/2))] &= 0xF0;
 			blockMetaData[((y*16*8)+(z*8)+(x/2))] |= data&0x0F;
 		} else {
-			System.out.println("shift");
 			blockMetaData[((y*16*8)+(z*8)+(x/2))] &= 0x0F;
 			blockMetaData[((y*16*8)+(z*8)+(x/2))] |= ((data&0x0F)<<4);
 		}
-		System.out.println(Integer.toHexString(blockMetaData[((y*16*8)+(z*8)+(x/2))]));
 	}
 	
 	public byte[] getBlockMetaData() {

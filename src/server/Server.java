@@ -14,6 +14,7 @@ import java.util.Random;
 import javax.crypto.NoSuchPaddingException;
 
 import server.io.MCSocket;
+import server.logging.Logger;
 import server.model.Player;
 import server.terrain.World;
 
@@ -25,6 +26,7 @@ public class Server {
 	private String serverId;
 	private int port;
 	private long time;
+	private static final Logger logger = Logger.getLogger(Server.class.getName());
 	
 	private List<World> worlds = new ArrayList<World>();
 
@@ -54,7 +56,7 @@ public class Server {
 		worlds.add(new World(0, 8, 8));
 		worlds.get(0).calculateLight();
 		worlds.get(0).calculateSunlight();
-		System.out.println("Done lighting.");
+		logger.log("Finished calculating light.");
 	}
 	
 	public void process() throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException {

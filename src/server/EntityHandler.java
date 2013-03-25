@@ -45,7 +45,7 @@ public class EntityHandler {
 		String joinMessage = p.getUsername() + " has joined.";
 		ChatPacket packet = new ChatPacket("§e" + joinMessage);
 		
-		logger.write(joinMessage);
+		logger.log(joinMessage);
 		
 		Iterator<Player> iterator = getPlayerIterator();
 		
@@ -69,7 +69,7 @@ public class EntityHandler {
 			DestroyEntitiesPacket destroyPacket = new DestroyEntitiesPacket();
 			destroyPacket.setEntityIds(new int[] {p.getId()});
 			
-			logger.write(leaveMessage);
+			logger.log(leaveMessage);
 			
 			Iterator<Player> iterator = getPlayerIterator();
 			

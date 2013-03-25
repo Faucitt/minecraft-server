@@ -33,7 +33,7 @@ public class Logger {
 	
 	private static SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
 	
-	public void write(String message) {
+	public void log(String message) {
 		Date date = new Date();
 		String time = format.format(date.getTime());
 		printStream.println("[" + time + "] " + message);

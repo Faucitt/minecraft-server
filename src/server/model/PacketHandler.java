@@ -41,7 +41,7 @@ public class PacketHandler implements Runnable {
 				p.pushPacket(chatResponsePacket);
 			}
 			
-			logger.write(chatMessage);
+			logger.log(chatMessage);
 			break;
 			
 		case (byte) 0x07:
@@ -110,7 +110,7 @@ public class PacketHandler implements Runnable {
 			break;
 			
 		default:
-			logger.write("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
+			logger.log("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
 			throw new IOException("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
 		}
 	}
