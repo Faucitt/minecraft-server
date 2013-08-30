@@ -106,7 +106,7 @@ public class PacketHandler implements Runnable {
 			break;
 			
 		case (byte) 0x13:
-			ActionPacket actionPacket = ActionPacket.read(socket);
+			EntityActionPacket entityActionPacket = EntityActionPacket.read(socket);
 			break;
 			
 		case (byte) 0xCC:

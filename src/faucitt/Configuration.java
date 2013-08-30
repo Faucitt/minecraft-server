@@ -4,6 +4,7 @@ public class Configuration {
 	private int maxPlayers = 25;
 	private String motd = "Welcome to my faucitt!";
 	private int chunkRange = 0;
+	private boolean isOnline = true;
 	
 	public int getMaxPlayers() {
 		return maxPlayers;
@@ -27,5 +28,13 @@ public class Configuration {
 
 	public void setChunkRange(int chunkRange) {
 		this.chunkRange = chunkRange;
+	}
+
+	public boolean isOnline() {
+		return isOnline;
+	}
+
+	public void setOnline(boolean isOnline) {
+		this.isOnline = isOnline;
 	}
 }
