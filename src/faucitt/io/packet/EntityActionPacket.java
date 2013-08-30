@@ -5,10 +5,10 @@ import java.io.IOException;
 import faucitt.io.MCSocket;
 
 
-public class ActionPacket extends Packet {
+public class EntityActionPacket extends Packet {
 
-	public ActionPacket() {
-		super((byte) 0x13);
+	public EntityActionPacket() {
+		super((byte) PacketID.EntityAction.getId());
 	}
 	
 	public enum Action {
@@ -43,13 +43,16 @@ public class ActionPacket extends Packet {
 	}
 
 	@Override
-	public void write(MCSocket socket) throws IOException {}
+	public void write(MCSocket socket) throws IOException {
+		socket.writeInt(getEntityId());
+		socket.writeInt(action.getId());
+	}
 	
 	private int entityId;
 	private Action action;
 	
-	public static ActionPacket read(MCSocket socket) throws IOException {
-		ActionPacket packet = new ActionPacket();
+	public static EntityActionPacket read(MCSocket socket) throws IOException {
+		EntityActionPacket packet = new EntityActionPacket();
 		packet.setEntityId(socket.readInt());
 		packet.setAction(Action.getForId(socket.readByte()));
 		return packet;

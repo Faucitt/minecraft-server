@@ -9,7 +9,7 @@ public class ChatPacket extends Packet {
 	private String message;
 
 	public ChatPacket() {
-		super((byte) 0x03);
+		super((byte) PacketID.ChatMessage.getId());
 	}
 	
 	public ChatPacket(String message) {
