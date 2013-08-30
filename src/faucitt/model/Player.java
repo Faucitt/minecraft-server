@@ -410,9 +410,9 @@ public class Player extends Entity implements Runnable {
 				reader.close();
 				
 				if (!server.getConfiguration().isOnline()) {
-					if (!response.equals("YES"))
-						throw new IOException(
-								"Player not authenticated with minecraft.net.");
+					if (!response.equals("YES")) {
+						this.disconnect("User not premium! (Bad Login)");
+					}
 				}
 				
 				// TODO: Check verification token is valid, prevents MITM
