@@ -1,4 +1,4 @@
-minecraft-server
+minecraft-faucitt
 ================
 
-Open source Minecraft server.
+Open source Minecraft faucitt.
