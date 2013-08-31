@@ -1,0 +1,29 @@
+----------
+| 1.6.x  |
+----------
+
+1.6.1: Protocol version is now 73. Packet 0xFA is sent after packet 0xFE with additional data
+
+1.6: Protocol version is now 72. Changed Open Window packet, added two inventory types
+
+----------
+| 1.5.x  |
+----------
+
+13w25a: Protocol version is now 71. Changed packet: Increment Statistic (0xC8)
+
+13w24b: Protocol version is now 70
+
+13w24a: Protocol version is now 69. Changed functionality: Time Update (0x04)
+
+13w23b: Protocol version is now 68.
+
+13w22a: Protocol version is now 67. New packet: Entity Properties (0x2C); Changed packets: Chat Message (0x03)
+
+13w18b: Protocol version is now 65.
+
+13w16b: Protocol version is now 63. New packet: Steer Vehicle (0x1B)
+
+13w16a: Protocol version is now 62. Changed packets: Update Health (0x08), Entity Action (0x17), Attach Entity (0x27), Player Abilities (0xCA)
+
+13w09c: Protocol version is now 60. 
