@@ -80,8 +80,7 @@ public class Server {
 		entityHandler = new EntityHandler();
 		connectionListener = new ServerSocket(configuration.getPort());
 
-		Server.logger
-				.log("Listening on port " + configuration.getPort() + "..");
+		Server.logger.log("Listening on port " + configuration.getPort() + "..");
 
 		worlds.add(new World(0, 8, 8));
 		Server.logger.log("Loaded world..");
