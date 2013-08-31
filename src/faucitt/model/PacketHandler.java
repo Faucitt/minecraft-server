@@ -3,6 +3,7 @@ package faucitt.model;
 import java.io.IOException;
 import java.util.Iterator;
 
+import faucitt.Server;
 import faucitt.io.MCSocket;
 import faucitt.io.packet.*;
 import faucitt.io.packet.AnimationPacket.Animation;
@@ -10,7 +11,6 @@ import faucitt.logging.Logger;
 
 
 public class PacketHandler implements Runnable {
-	private static final Logger logger = Logger.getLogger(PacketHandler.class.getName());
 	private Player player;
 	
 	public PacketHandler(Player player) {
@@ -42,7 +42,7 @@ public class PacketHandler implements Runnable {
 				p.pushPacket(chatResponsePacket);
 			}
 			
-			logger.log(chatMessage);
+			Server.logger.log(chatMessage);
 			break;
 			
 		case (byte) 0x07:
@@ -118,7 +118,7 @@ public class PacketHandler implements Runnable {
 			break;
 			
 		default:
-			logger.log("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
+			Server.logger.log("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
 			throw new IOException("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
 		}
 	}

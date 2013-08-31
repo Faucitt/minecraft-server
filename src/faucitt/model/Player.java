@@ -38,6 +38,7 @@ import faucitt.io.packet.FlyingPacket;
 import faucitt.io.packet.HandshakePacket;
 import faucitt.io.packet.LoginPacket;
 import faucitt.io.packet.Packet;
+import faucitt.io.packet.PacketID;
 import faucitt.io.packet.SpawnPlayerPacket;
 import faucitt.io.packet.TimePacket;
 import faucitt.terrain.World;
@@ -84,6 +85,8 @@ public class Player extends Entity implements Runnable {
 				p.sendMessage(ChatColor.DarkGreen + this.username + ChatColor.Red + " has disconnected.");
 			}
 			
+			Server.logger.log("Disconnected: " + this.username);
+			
 			players.remove(this);
 			sendPacket(new DisconnectPacket(reason));
 		} catch (IOException e) {
@@ -101,7 +104,7 @@ public class Player extends Entity implements Runnable {
 	
 	public void sendMessage(String msg) {
 		try {
-			sendPacket(new ChatPacket(msg));
+			packetHandler.handlePacket(PacketID.ChatMessage.getId(), socket);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -359,9 +362,9 @@ public class Player extends Entity implements Runnable {
 				Configuration config = server.getConfiguration();
 				DisconnectPacket packet = new DisconnectPacket("§1"
 						+ Encode.character(0)
-						+ "60"
+						+ "73"
 						+ Encode.character(0)
-						+ "1.5"
+						+ "1.6.2"
 						+ Encode.character(0)
 						+ config.getMotd()
 						+ Encode.character(0)
