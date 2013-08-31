@@ -59,10 +59,10 @@ public class Server {
 
 		configuration = new Configuration();
 
-		Server.logger.log(">> Port: " + configuration.getPort());
-		Server.logger.log(">> Max-Players: " + configuration.getMaxPlayers());
-		Server.logger.log(">> Chunk Range: " + configuration.getChunkRange());
-		Server.logger.log(">> Message of the Day: " + configuration.getMotd());
+		Server.logger.log(">>  Port: " + configuration.getPort());
+		Server.logger.log(">>  Max-Players: " + configuration.getMaxPlayers());
+		Server.logger.log(">>  Chunk Range: " + configuration.getChunkRange());
+		Server.logger.log(">>  Message of the Day: " + configuration.getMotd());
 
 		Server server = new Server();
 		server.process();

@@ -118,7 +118,7 @@ public class PacketHandler implements Runnable {
 			break;
 			
 		default:
-			Server.logger.log("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
+			Server.logger.log("Unhandled packet recieved: 0x" + Integer.toHexString(packetId&0xFF));
 			throw new IOException("Unhandled packet: 0x" + Integer.toHexString(packetId&0xFF));
 		}
 	}
