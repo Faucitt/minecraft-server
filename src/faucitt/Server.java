@@ -23,23 +23,29 @@ public class Server {
 	
 	private ServerSocket connectionListener;
 	private EntityHandler entityHandler;
-	private Configuration configuration;
+	private static Configuration configuration;
 	private String serverId;
-	private int port;
 	private long time;
-	private static final Logger logger = Logger.getLogger(Server.class.getName());
+	public static final Logger logger = Logger.getLogger("Faucitt");
 	
 	private List<World> worlds = new ArrayList<World>();
 
 	public static void main(String[] args) throws Exception {
-		if (args.length < 1) throw new Exception("Incorrect arguments, expected: [port]");
-		Server server = new Server(Integer.parseInt(args[0]));
+		logger.log("Running " + Versioning.getName() + " " + Versioning.getVersion());
+		logger.log("Starting server..");
+		
+		configuration = new Configuration();
+		
+		Server.logger.log(">> Port: " + configuration.getPort());
+		Server.logger.log(">> Max-Players: " + configuration.getMaxPlayers());
+		Server.logger.log(">> Chunk Range: " + configuration.getChunkRange());
+		Server.logger.log(">> Message of the Day: " + configuration.getMotd());
+		
+		Server server = new Server();
 		server.process();
 	}
 	
-	public Server(int port) throws IOException {
-		setPort(port);
-		
+	public Server() throws IOException {	
 		String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		serverId = "";
 		Random rng = new Random();
@@ -48,22 +54,24 @@ public class Server {
 			serverId += chars.substring(off, off+1);
 		}
 		
-		Configuration config = new Configuration();
-		configuration = config;
-		
 		entityHandler = new EntityHandler();
-		connectionListener = new ServerSocket(port);
+		connectionListener = new ServerSocket(configuration.getPort());
+		
+		Server.logger.log("Listening on port " + configuration.getPort() + "..");
 		
 		worlds.add(new World(0, 8, 8));
+		Server.logger.log("Loaded world..");
 		worlds.get(0).calculateLight();
 		worlds.get(0).calculateSunlight();
-		logger.log("Finished calculating light.");
+		logger.log("Finished calculating light");
+		Server.logger.log("Startup complete!");
 	}
 	
 	public void process() throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException {
 		//Start physics threads etc. here.
 		Thread tickThread = new Thread(new TickHandler(this));
 		tickThread.start();
+		Server.logger.log("Now accepting connections..");
 		
 		//Connection listener thread.
 		while (true) {
@@ -107,14 +115,6 @@ public class Server {
 
 	public void setEntityHandler(EntityHandler entityHandler) {
 		this.entityHandler = entityHandler;
-	}
-
-	public int getPort() {
-		return port;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
 	}
 
 	public List<World> getWorlds() {
